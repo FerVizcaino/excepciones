@@ -1,0 +1,85 @@
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        try (Scanner scanner = new Scanner(System.in)) {
+            ejecutarPrograma(scanner);
+        }
+    }
+
+    private static void ejecutarPrograma(Scanner scanner) {
+
+        procesarCaracter(scanner);
+
+
+        procesarNumero(scanner);
+    }
+
+    private static void procesarCaracter(Scanner scanner) {
+        String palabra = solicitarPalabra(scanner);
+        int posicion = solicitarPosicion(scanner, palabra.length());
+
+        try {
+            char caracter = Caracter.obtenerCaracterEn(palabra, posicion);
+            System.out.println("El carácter en la posición " + posicion + " es: " + caracter);
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    private static void procesarNumero(Scanner scanner) {
+        double numero = solicitarNumero(scanner);
+
+        try {
+            validarNumeroPositivo(numero);
+            System.out.println("La raíz cuadrada de " + numero + " es: " + Math.sqrt(numero));
+        } catch (Caracter.NumeroNegativoExcepcion e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private static String solicitarPalabra(Scanner scanner) {
+        System.out.println("Escribe una palabra: ");
+        return scanner.nextLine();
+    }
+
+    private static int solicitarPosicion(Scanner scanner, int longitudPalabra) {
+        System.out.println("Escribe la posición del carácter que quieres obtener: ");
+        int posicion = scanner.nextInt();
+        if (posicion < 0 || posicion >= longitudPalabra) {
+            System.out.println("No existe la posición " + posicion + " en esta cadena.");
+            System.exit(0);
+        }
+        return posicion;
+    }
+
+    private static double solicitarNumero(Scanner scanner) {
+        System.out.println("Escribe un número: ");
+        return scanner.nextDouble();
+    }
+
+    private static void validarNumeroPositivo(double numero) throws Caracter.NumeroNegativoExcepcion {
+        if (numero < 0) {
+            throw new Caracter.NumeroNegativoExcepcion("El número es negativo: " + numero);
+        }
+    }
+
+
+//Caracter
+
+class Caracter {
+
+    public static char obtenerCaracterEn(String cadena, int posicion) throws Exception {
+        if (posicion < 0 || posicion >= cadena.length()) {
+            throw new Exception("Posición inválida.");
+        }
+        return cadena.charAt(posicion);
+    }
+
+
+    public static class NumeroNegativoExcepcion extends Exception {
+        public NumeroNegativoExcepcion(String mensaje) {
+            super(mensaje);
+        }
+    }
+}
